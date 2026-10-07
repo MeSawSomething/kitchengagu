@@ -669,6 +669,79 @@
       .meta-list li span { color: var(--muted); }
       .meta-list li .req { color: var(--danger); font-weight: 800; margin-left: 0.15em; }
 
+      /* ── 내용이 화면보다 길 때: 아래로 더 보기 표시 ── */
+      .more-hint {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: calc(var(--nav-h) + env(safe-area-inset-bottom));
+        height: 56px;
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        padding-bottom: 8px;
+        background: linear-gradient(to bottom, rgba(246, 246, 247, 0), var(--bg) 75%);
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.25s;
+        z-index: 9;
+      }
+      .more-hint span {
+        font-size: 0.72rem;
+        font-weight: 700;
+        color: var(--accent);
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 0.25em 0.8em;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        animation: bob 1.6s ease-in-out infinite;
+      }
+      .more-hint.show { opacity: 1; }
+      .app.on-chapter .more-hint {
+        background: linear-gradient(to bottom, rgba(59, 47, 201, 0), #3b2fc9 75%);
+      }
+      @keyframes bob {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(3px); }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .more-hint span { animation: none; }
+      }
+      /* 스크롤이 생기는 슬라이드는 위쪽부터 시작 (가운데 정렬 때문에 위가 잘리지 않게) */
+      .slide.scrolls > .inner { margin-top: 0; }
+
+      /* ── 세로가 짧은 기기: 간격·글자 크기를 줄여 스크롤 최소화 ── */
+      @media (max-height: 740px) {
+        :root { --nav-h: 58px; }
+        .slide {
+          padding-top: calc(env(safe-area-inset-top) + 18px);
+          padding-bottom: calc(env(safe-area-inset-bottom) + var(--nav-h) + 16px);
+        }
+        body { font-size: 15px; line-height: 1.5; }
+        h1 { font-size: 1.85rem; }
+        h2 { font-size: 1.28rem; }
+        h3 { margin: 0.9em 0 0.35em; }
+        .kicker { margin-bottom: 0.4em; }
+        .lead { margin-top: 0.5em; }
+        .stack, .grid2, .stat-row, .toc-list { margin-top: 0.75em; gap: 0.5rem; }
+        .card { padding: 0.75em 0.9em; }
+        .callout { margin-top: 0.75em; padding: 0.65em 0.85em; }
+        .toc-item { padding: 0.5em 0; }
+        ul.clean li { padding: 0.4em 0 0.4em 1.3em; }
+        ol.steps { margin-top: 0.75em; }
+        ol.steps li { padding-bottom: 0.7em; }
+        .meta-list { margin-top: 0.6em; }
+        .meta-list li { padding: 0.4em 0; }
+        .nav button { width: 44px; height: 44px; }
+        .chapter .ch-num { font-size: 5rem; }
+        .chapter .ch-label { margin-top: 1.4em; }
+        .chapter .ch-next { margin-top: 1.6em; }
+      }
+      @media (max-height: 600px) {
+        h2 .sub { display: none; }
+      }
+
       /* ── 상단 진행바 · 하단 내비게이션 ── */
       .progress {
         position: absolute;
@@ -1394,6 +1467,7 @@
         </div>
       </section>
 
+      <div class="more-hint" id="more"><span>↓ 아래로 더 보기</span></div>
       <div class="swipe-hint" id="hint">← 좌우로 넘겨 보세요 →</div>
       <nav class="nav">
         <button id="prevBtn" aria-label="이전">‹</button>
@@ -1426,7 +1500,31 @@
           "on-chapter",
           slides[idx].classList.contains("chapter"),
         );
+        updateScroll();
       }
+      // 내용이 화면보다 길면 위쪽부터 보여주고, 끝까지 내리기 전까지 '아래로 더 보기' 표시
+      function updateScroll() {
+        const s = slides[idx];
+        s.classList.remove("scrolls");
+        const overflow = s.scrollHeight - s.clientHeight > 4;
+        s.classList.toggle("scrolls", overflow);
+        const left = s.scrollHeight - s.clientHeight - s.scrollTop;
+        $("more").classList.toggle("show", overflow && left > 12);
+        if (overflow && idx === 0) $("hint").style.opacity = 0;
+      }
+      slides.forEach((s) =>
+        s.addEventListener(
+          "scroll",
+          () => {
+            if (s === slides[idx]) updateScroll();
+          },
+          { passive: true },
+        ),
+      );
+      window.addEventListener("resize", () => setTimeout(updateScroll, 50));
+      if (document.fonts && document.fonts.ready)
+        document.fonts.ready.then(updateScroll);
+
       function go(n) {
         idx = Math.max(0, Math.min(total - 1, n));
         render();
