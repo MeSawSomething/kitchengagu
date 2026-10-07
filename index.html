@@ -29,6 +29,7 @@
           "Apple SD Gothic Neo", "Segoe UI", sans-serif;
         --pad-x: 20px;
         --nav-h: 64px;
+        --app-h: 100vh; /* JS가 실제 보이는 높이로 덮어씀 */
       }
       * {
         box-sizing: border-box;
@@ -57,8 +58,7 @@
         position: relative;
         width: 100%;
         max-width: 440px;
-        height: 100vh;
-        height: 100dvh;
+        height: var(--app-h);
         margin: 0 auto;
         background: var(--bg);
         overflow: hidden;
@@ -87,7 +87,10 @@
         padding: calc(env(safe-area-inset-top) + 28px) var(--pad-x)
           calc(env(safe-area-inset-bottom) + var(--nav-h) + 24px);
         overflow-y: auto;
+        overflow-x: hidden;
         -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;
+        touch-action: pan-y; /* 세로 스크롤만 브라우저에 맡기고 가로 스와이프는 슬라이드 넘김에 사용 */
         visibility: hidden;
         opacity: 0;
         transform: translateX(24px);
@@ -122,7 +125,7 @@
         max-width: 100%;
         height: auto;
         max-height: calc(
-          100dvh - var(--nav-h) - env(safe-area-inset-top) -
+          var(--app-h) - var(--nav-h) - env(safe-area-inset-top) -
             env(safe-area-inset-bottom) - 120px
         );
         object-fit: contain;
@@ -538,6 +541,134 @@
         color: var(--warn);
       }
 
+      /* ── 챕터 표지: 보라색 전체 화면 ── */
+      .slide.chapter {
+        background:
+          radial-gradient(120% 70% at 100% 0%, rgba(255, 255, 255, 0.14), transparent 60%),
+          linear-gradient(160deg, #5b52f0 0%, #4f46e5 45%, #3b2fc9 100%);
+        color: #fff;
+      }
+      .chapter .inner { margin: auto 0; }
+      .chapter .done {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5em;
+        font-size: 0.8rem;
+        color: rgba(255, 255, 255, 0.6);
+        letter-spacing: 0.04em;
+      }
+      .chapter .done s { text-decoration-thickness: 1px; }
+      .chapter .ch-label {
+        margin-top: 2.2em;
+        font-size: 0.85rem;
+        font-weight: 800;
+        letter-spacing: 0.2em;
+        color: rgba(255, 255, 255, 0.75);
+      }
+      .chapter .ch-num {
+        font-size: 6.5rem;
+        line-height: 0.95;
+        font-weight: 800;
+        letter-spacing: -0.05em;
+        margin-top: 0.05em;
+      }
+      .chapter h1 { color: #fff; margin-top: 0.35em; }
+      .chapter .ch-desc {
+        color: rgba(255, 255, 255, 0.82);
+        font-size: 1rem;
+        margin-top: 0.9em;
+      }
+      .chapter .ch-next {
+        margin-top: 2.4em;
+        padding-top: 1em;
+        border-top: 1px solid rgba(255, 255, 255, 0.25);
+      }
+      .chapter .ch-next small {
+        display: block;
+        font-size: 0.72rem;
+        letter-spacing: 0.14em;
+        color: rgba(255, 255, 255, 0.6);
+        font-weight: 700;
+      }
+      .chapter .ch-next b { font-size: 1.05rem; font-weight: 700; }
+      .chapter .ch-next b::after {
+        content: " →";
+        display: inline-block;
+        animation: nudge 1.4s ease-in-out infinite;
+      }
+      @keyframes nudge {
+        0%, 100% { transform: translateX(0); }
+        50% { transform: translateX(6px); }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .chapter .ch-next b::after { animation: none; }
+      }
+      /* 챕터 화면에서는 하단바·진행바도 보라 배경에 맞춤 */
+      .app.on-chapter .nav {
+        background: transparent;
+        border-top-color: rgba(255, 255, 255, 0.2);
+        -webkit-backdrop-filter: none;
+        backdrop-filter: none;
+      }
+      .app.on-chapter .nav button {
+        background: rgba(255, 255, 255, 0.14);
+        border-color: rgba(255, 255, 255, 0.3);
+        color: #fff;
+      }
+      .app.on-chapter .nav .counter,
+      .app.on-chapter .nav .doc { color: rgba(255, 255, 255, 0.85); }
+      .app.on-chapter .progress { background: #fff; }
+
+      /* ── 블로그 프로토콜: A/B 유형 카드 ── */
+      .type-card .type-head {
+        display: flex;
+        align-items: center;
+        gap: 0.6em;
+        margin-bottom: 0.5em;
+      }
+      .type-card .type-badge {
+        flex: 0 0 auto;
+        width: 2em;
+        height: 2em;
+        border-radius: 10px;
+        display: grid;
+        place-items: center;
+        font-weight: 800;
+        color: #fff;
+        background: var(--accent);
+      }
+      .type-card.b .type-badge { background: var(--accent2); }
+      .type-card .flow {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.35em;
+        margin: 0.2em 0 0.55em;
+        font-size: 0.82rem;
+        font-weight: 600;
+      }
+      .type-card .flow span {
+        background: var(--bg);
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 0.15em 0.65em;
+      }
+      .type-card .flow i { font-style: normal; color: var(--muted); }
+      .meta-list { margin-top: 0.9em; }
+      .meta-list li {
+        display: grid;
+        grid-template-columns: 6.2em 1fr;
+        gap: 0.6em;
+        padding: 0.55em 0;
+        border-bottom: 1px solid var(--line);
+        font-size: 0.9rem;
+        list-style: none;
+      }
+      .meta-list li:last-child { border-bottom: none; }
+      .meta-list li b { color: var(--fg); font-weight: 700; }
+      .meta-list li span { color: var(--muted); }
+      .meta-list li .req { color: var(--danger); font-weight: 800; margin-left: 0.15em; }
+
       /* ── 상단 진행바 · 하단 내비게이션 ── */
       .progress {
         position: absolute;
@@ -690,7 +821,7 @@
               </div>
             </div>
 
-            <div class="toc-item" data-go="8">
+            <div class="toc-item" data-go="4">
               <span class="toc-num">03</span>
               <div class="toc-body">
                 <h4>마케팅 전략</h4>
@@ -698,25 +829,32 @@
               </div>
             </div>
 
-            <div class="toc-item" data-go="10">
+            <div class="toc-item" data-go="7">
               <span class="toc-num">04</span>
               <div class="toc-body">
                 <h4>추진 일정</h4>
                 <p>뭐부터 할까</p>
               </div>
             </div>
-            <div class="toc-item" data-go="11">
+            <div class="toc-item" data-go="8">
               <span class="toc-num">05</span>
               <div class="toc-body">
                 <h4>예산·수익 계획</h4>
                 <p>투자 비용과 손익 목표</p>
               </div>
             </div>
-            <div class="toc-item" data-go="12">
+            <div class="toc-item" data-go="9">
               <span class="toc-num">06</span>
               <div class="toc-body">
                 <h4>리스크 관리</h4>
                 <p>예상 위험과 대응 방안</p>
+              </div>
+            </div>
+            <div class="toc-item" data-go="11">
+              <span class="toc-num">07</span>
+              <div class="toc-body">
+                <h4>블로그 글 작성 프로토콜</h4>
+                <p>Chapter 02 · 작성 유형, 메타데이터, 사진 규칙</p>
               </div>
             </div>
           </div>
@@ -738,7 +876,7 @@
             <strong class="danger">No</strong>
           </p>
 
-          <stack>
+          <div class="stack">
             <div class="card">
               <h4>카페홍보 포기이유</h4>
               <ul class="mini">
@@ -748,7 +886,7 @@
                 <li>일반 고객용으로는 보다 더 효과적인 수단들이 많음</li>
               </ul>
             </div>
-          </stack>
+          </div>
 
           <div class="callout key">
             <span class="lbl">단기효과</span>
@@ -774,11 +912,9 @@
         <div class="inner">
           <div class="kicker">시장 분석</div>
           <h2><span class="num">02</span>시장 동향과 기회</h2>
-          <lead>
-            <p class="lead">
-              <strong class="accent">작년 건설업 부진의 여파 지속</strong>
-            </p>
-          </lead>
+          <p class="lead">
+            <strong class="accent">작년 건설업 부진의 여파 지속</strong>
+          </p>
           <div class="stack">
             <div class="card">
               <span class="tag">주력</span>
@@ -1121,14 +1257,124 @@
       </section>
 
       <!-- ================= Chapter 02  ================= -->
-      <section class="slide">
-        <div class="inner"></div>
+      <section class="slide chapter">
+        <div class="inner">
+          <div class="done">✓ <s>CHAPTER 01 · 방향성</s></div>
+          <div class="ch-label">CHAPTER</div>
+          <div class="ch-num">02</div>
+          <h1>이제, 실행</h1>
+          <p class="ch-desc">
+            Chapter 01에서 <b>무엇을 할지</b> 정했다면,<br />
+            Chapter 02는 <b>어떻게 꾸준히 할지</b>에 대한 이야기
+          </p>
+          <div class="ch-next">
+            <small>NEXT</small>
+            <b>07 블로그 글 작성 프로토콜</b>
+          </div>
+        </div>
       </section>
 
-      <!-- ================= 07 블로그 작성 팁 ================= -->
+      <!-- ================= 07 블로그 글 작성 프로토콜 (1/3) 작성 유형 ================= -->
       <section class="slide">
         <div class="inner">
           <div class="kicker">블로그 글 작성 프로토콜</div>
+          <h2>
+            <span class="num">07 · 1/3</span>누가 찍고, 누가 쓰는가
+            <span class="sub">현장 상황에 따라 두 가지 유형으로 운영</span>
+          </h2>
+          <div class="stack">
+            <div class="card type-card a">
+              <div class="type-head">
+                <span class="type-badge">A</span>
+                <h4>1인 진행</h4>
+              </div>
+              <div class="flow">
+                <span>사진 촬영</span><i>=</i><span>AI 글 생성</span>
+              </div>
+              <ul class="mini">
+                <li>현장을 아는 사람이 직접 써서 내용이 정확함</li>
+                <li>현장 업무와 겹치면 글이 밀리기 쉬움</li>
+              </ul>
+            </div>
+            <div class="card type-card b">
+              <div class="type-head">
+                <span class="type-badge">B</span>
+                <h4>분업 진행</h4>
+              </div>
+              <div class="flow">
+                <span>사진 촬영</span><i>→</i><span>AI 글 생성</span>
+              </div>
+              <ul class="mini">
+                <li>현장은 촬영만, 글은 다른 사람이 맡아 부담 분산</li>
+                <li>현장 정보가 빠지기 쉬움 → 전달 양식이 꼭 필요</li>
+              </ul>
+            </div>
+          </div>
+          <div class="callout key">
+            <span class="lbl">공통 원칙</span>
+            <p>
+              A·B 모두 <strong>같은 프로토콜</strong>로 작업한다.<br />
+              <b>메타데이터 + 정해진 규칙의 사진</b>을 AI에 넣고 →
+              사실 확인 후 발행
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 07 블로그 글 작성 프로토콜 (2/3) 메타데이터 ================= -->
+      <section class="slide">
+        <div class="inner">
+          <div class="kicker">블로그 글 작성 프로토콜</div>
+          <h2>
+            <span class="num">07 · 2/3</span>[메타데이터] 필요
+            <span class="sub">현장마다 같은 양식으로 채워서 AI에 전달</span>
+          </h2>
+          <ul class="meta-list">
+            <li><b>현장명<span class="req">*</span></b><span>예: ○○아파트 (블로그 공개 여부 함께 표시)</span></li>
+            <li><b>지역<span class="req">*</span></b><span>예: 경기 ○○시 ○○동</span></li>
+            <li><b>평형<span class="req">*</span></b><span>예: 32평</span></li>
+            <li><b>작업<span class="req">*</span></b><span>주방 교체 / 신축 / 부분 교체 / 다가구 일괄 …</span></li>
+            <li><b>주요 작업<span class="req">*</span></b><span>예: ㄱ자 싱크대, 키큰장, 상판 교체</span></li>
+            <li><b>특이사항</b><span>예: 배관 위치 이동, 벽 기울기</span></li>
+            <li><b>시공 중 문제</b><span>어떤 문제가 있었고 <strong>어떻게 해결</strong>했는지</span></li>
+            <li><b>강조할 부분<span class="req">*</span></b><span>이 글에서 꼭 보여줄 한 가지</span></li>
+            <li><b>자재·색상</b><span>예: 무광 화이트 도어, 엔지니어드스톤</span></li>
+            <li><b>시공 기간</b><span>예: 철거~마감 2일</span></li>
+          </ul>
+          <div class="callout">
+            <span class="lbl">운영 팁</span>
+            <p>
+              양식을 메모 앱·카톡 나에게 보내기에 저장해 두고 현장마다
+              복사해서 채운다. <strong>B 유형은 촬영자가 메타데이터까지 작성</strong>해서
+              사진과 함께 넘긴다. (<span class="danger">*</span> 필수)
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 07 블로그 글 작성 프로토콜 (3/3) 사진 규칙 ================= -->
+      <section class="slide">
+        <div class="inner">
+          <div class="kicker">블로그 글 작성 프로토콜</div>
+          <h2>
+            <span class="num">07 · 3/3</span>[사진]도 일정한 규칙 필요
+            <span class="sub">누가 찍어도 같은 구성으로 나오도록</span>
+          </h2>
+          <h3>현장마다 필수 컷</h3>
+          <ol class="steps">
+            <li data-n="1"><h4>시공 전 전경</h4><p>after와 같은 위치·각도에서 찍을 수 있게 서 있는 자리 기억</p></li>
+            <li data-n="2"><h4>철거·설치 과정</h4><p>기술력이 보이는 장면 (수평 맞추기, 배관 작업 등)</p></li>
+            <li data-n="3"><h4>디테일</h4><p>상판 마감, 손잡이, 수납 내부, 이음새</p></li>
+            <li data-n="4"><h4>시공 후 전경</h4><p>1번과 같은 자리·같은 각도 → 비포·애프터 비교용</p></li>
+          </ol>
+          <h3>촬영 규칙</h3>
+          <ul class="clean">
+            <li>한 현장 안에서 <strong>가로·세로 방향 통일</strong></li>
+            <li>조명 모두 켜고, 주변 정리 후 촬영</li>
+            <li>가족사진·우편물·현관 호수 등 <strong>개인정보 안 보이게</strong></li>
+            <li>파일명: <strong>날짜_현장명_번호</strong> (예: 20261007_○○아파트_01)</li>
+            <li>현장당 최소 <span class="fill">00</span>장, 현장별 폴더로 모으기</li>
+          </ul>
         </div>
       </section>
 
@@ -1176,6 +1422,10 @@
         $("prevBtn").disabled = idx === 0;
         $("nextBtn").disabled = idx === total - 1;
         if (idx > 0) $("hint").style.opacity = 0;
+        $("app").classList.toggle(
+          "on-chapter",
+          slides[idx].classList.contains("chapter"),
+        );
       }
       function go(n) {
         idx = Math.max(0, Math.min(total - 1, n));
@@ -1190,36 +1440,67 @@
           el.addEventListener("click", () => go(+el.dataset.go)),
         );
 
+      // 실제 보이는 화면 높이에 맞춤 (카카오톡·네이버 앱 등 인앱 브라우저, 주소창 높이 차이 대응)
+      function setAppHeight() {
+        document.documentElement.style.setProperty(
+          "--app-h",
+          window.innerHeight + "px",
+        );
+      }
+      setAppHeight();
+      window.addEventListener("resize", setAppHeight);
+      window.addEventListener("orientationchange", () =>
+        setTimeout(setAppHeight, 300),
+      );
+
       // 스와이프: 가로 이동이 세로 이동보다 뚜렷할 때만 넘김 (세로 스크롤과 충돌 방지)
+      // touchmove로 마지막 위치를 기록하고, 안드로이드에서 touchend 대신 오는 touchcancel도 처리
       let sx = 0,
         sy = 0,
-        st = 0;
-      $("app").addEventListener(
+        lx = 0,
+        ly = 0,
+        st = 0,
+        tracking = false;
+      const app = $("app");
+      app.addEventListener(
         "touchstart",
         (e) => {
-          const t = e.touches[0];
-          sx = t.clientX;
-          sy = t.clientY;
-          st = Date.now();
-        },
-        { passive: true },
-      );
-      $("app").addEventListener(
-        "touchend",
-        (e) => {
-          const t = e.changedTouches[0];
-          const dx = t.clientX - sx,
-            dy = t.clientY - sy;
-          if (
-            Math.abs(dx) > 50 &&
-            Math.abs(dx) > Math.abs(dy) * 1.5 &&
-            Date.now() - st < 800
-          ) {
-            go(dx < 0 ? idx + 1 : idx - 1);
+          if (e.touches.length > 1) {
+            tracking = false;
+            return;
           }
+          const t = e.touches[0];
+          sx = lx = t.clientX;
+          sy = ly = t.clientY;
+          st = Date.now();
+          tracking = true;
         },
         { passive: true },
       );
+      app.addEventListener(
+        "touchmove",
+        (e) => {
+          const t = e.touches[0];
+          lx = t.clientX;
+          ly = t.clientY;
+        },
+        { passive: true },
+      );
+      function endSwipe() {
+        if (!tracking) return;
+        tracking = false;
+        const dx = lx - sx,
+          dy = ly - sy;
+        if (
+          Math.abs(dx) > 40 &&
+          Math.abs(dx) > Math.abs(dy) * 1.2 &&
+          Date.now() - st < 1000
+        ) {
+          go(dx < 0 ? idx + 1 : idx - 1);
+        }
+      }
+      app.addEventListener("touchend", endSwipe, { passive: true });
+      app.addEventListener("touchcancel", endSwipe, { passive: true });
 
       // 데스크톱 확인용 키보드
       document.addEventListener("keydown", (e) => {
