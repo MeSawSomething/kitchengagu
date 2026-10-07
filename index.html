@@ -6,6 +6,7 @@
       name="viewport"
       content="width=device-width, initial-scale=1, viewport-fit=cover"
     />
+    <meta name="robots" content="noindex" />
     <meta name="theme-color" content="#f6f6f7" />
     <title>주방가구 기획서</title>
     <link
@@ -28,7 +29,6 @@
           "Apple SD Gothic Neo", "Segoe UI", sans-serif;
         --pad-x: 20px;
         --nav-h: 64px;
-        --app-h: 100vh; /* JS가 실제 보이는 높이로 덮어씀 */
       }
       * {
         box-sizing: border-box;
@@ -57,7 +57,8 @@
         position: relative;
         width: 100%;
         max-width: 440px;
-        height: var(--app-h);
+        height: 100vh;
+        height: 100dvh;
         margin: 0 auto;
         background: var(--bg);
         overflow: hidden;
@@ -86,10 +87,7 @@
         padding: calc(env(safe-area-inset-top) + 28px) var(--pad-x)
           calc(env(safe-area-inset-bottom) + var(--nav-h) + 24px);
         overflow-y: auto;
-        overflow-x: hidden;
         -webkit-overflow-scrolling: touch;
-        overscroll-behavior: contain;
-        touch-action: pan-y; /* 세로 스크롤만 브라우저에 맡기고 가로 스와이프는 슬라이드 넘김에 사용 */
         visibility: hidden;
         opacity: 0;
         transform: translateX(24px);
@@ -124,7 +122,7 @@
         max-width: 100%;
         height: auto;
         max-height: calc(
-          var(--app-h) - var(--nav-h) - env(safe-area-inset-top) -
+          100dvh - var(--nav-h) - env(safe-area-inset-top) -
             env(safe-area-inset-bottom) - 120px
         );
         object-fit: contain;
@@ -692,7 +690,7 @@
               </div>
             </div>
 
-            <div class="toc-item" data-go="4">
+            <div class="toc-item" data-go="8">
               <span class="toc-num">03</span>
               <div class="toc-body">
                 <h4>마케팅 전략</h4>
@@ -700,21 +698,21 @@
               </div>
             </div>
 
-            <div class="toc-item" data-go="7">
+            <div class="toc-item" data-go="10">
               <span class="toc-num">04</span>
               <div class="toc-body">
                 <h4>추진 일정</h4>
                 <p>뭐부터 할까</p>
               </div>
             </div>
-            <div class="toc-item" data-go="8">
+            <div class="toc-item" data-go="11">
               <span class="toc-num">05</span>
               <div class="toc-body">
                 <h4>예산·수익 계획</h4>
                 <p>투자 비용과 손익 목표</p>
               </div>
             </div>
-            <div class="toc-item" data-go="9">
+            <div class="toc-item" data-go="12">
               <span class="toc-num">06</span>
               <div class="toc-body">
                 <h4>리스크 관리</h4>
@@ -740,7 +738,7 @@
             <strong class="danger">No</strong>
           </p>
 
-          <div class="stack">
+          <stack>
             <div class="card">
               <h4>카페홍보 포기이유</h4>
               <ul class="mini">
@@ -750,7 +748,7 @@
                 <li>일반 고객용으로는 보다 더 효과적인 수단들이 많음</li>
               </ul>
             </div>
-          </div>
+          </stack>
 
           <div class="callout key">
             <span class="lbl">단기효과</span>
@@ -776,9 +774,11 @@
         <div class="inner">
           <div class="kicker">시장 분석</div>
           <h2><span class="num">02</span>시장 동향과 기회</h2>
-          <p class="lead">
-            <strong class="accent">작년 건설업 부진의 여파 지속</strong>
-          </p>
+          <lead>
+            <p class="lead">
+              <strong class="accent">작년 건설업 부진의 여파 지속</strong>
+            </p>
+          </lead>
           <div class="stack">
             <div class="card">
               <span class="tag">주력</span>
@@ -856,44 +856,6 @@
               <span class="fill">0년</span> 무상 A/S
             </p>
           </div>
-        </div>
-      </section> -->
-
-      <!-- ================= 05 시공 프로세스 ================= -->
-      <!-- <section class="slide">
-        <div class="inner">
-          <div class="kicker">시공 프로세스</div>
-          <h2><span class="num">05</span>상담부터 A/S까지</h2>
-          <ol class="steps">
-            <li data-n="1">
-              <h4>온라인·전화 상담 <small>D-21</small></h4>
-              <p>평형·현재 주방 사진으로 예상 견적 안내</p>
-            </li>
-            <li data-n="2">
-              <h4>방문 실측 <small>D-18</small></h4>
-              <p>배관·전기·환기 위치 확인, 현장 사진 기록</p>
-            </li>
-            <li data-n="3">
-              <h4>3D 디자인 시안 <small>D-15</small></h4>
-              <p>색상·자재 2~3안 제시, 수정 1회 포함</p>
-            </li>
-            <li data-n="4">
-              <h4>견적 확정·계약 <small>D-14</small></h4>
-              <p>정찰제 견적서, 계약금 <span class="fill">00%</span></p>
-            </li>
-            <li data-n="5">
-              <h4>공장 제작 <small>D-14~D-2</small></h4>
-              <p>협력 공장 주문 제작, 출고 전 검수</p>
-            </li>
-            <li data-n="6">
-              <h4>철거·시공 <small>D-day</small></h4>
-              <p>철거·설치·실리콘 마감, 평균 <span class="fill">0일</span></p>
-            </li>
-            <li data-n="7">
-              <h4>검수·A/S <small>D+7</small></h4>
-              <p>고객 확인서 서명, 1주 후 해피콜</p>
-            </li>
-          </ol>
         </div>
       </section> -->
 
@@ -1158,6 +1120,18 @@
         </div>
       </section>
 
+      <!-- ================= Chapter 02  ================= -->
+      <section class="slide">
+        <div class="inner"></div>
+      </section>
+
+      <!-- ================= 07 블로그 작성 팁 ================= -->
+      <section class="slide">
+        <div class="inner">
+          <div class="kicker">블로그 글 작성 프로토콜</div>
+        </div>
+      </section>
+
       <!-- ================= 마무리 ================= -->
       <section class="slide title-wrap">
         <div class="inner">
@@ -1216,67 +1190,36 @@
           el.addEventListener("click", () => go(+el.dataset.go)),
         );
 
-      // 실제 보이는 화면 높이에 맞춤 (카카오톡·네이버 앱 등 인앱 브라우저, 주소창 높이 차이 대응)
-      function setAppHeight() {
-        document.documentElement.style.setProperty(
-          "--app-h",
-          window.innerHeight + "px",
-        );
-      }
-      setAppHeight();
-      window.addEventListener("resize", setAppHeight);
-      window.addEventListener("orientationchange", () =>
-        setTimeout(setAppHeight, 300),
-      );
-
       // 스와이프: 가로 이동이 세로 이동보다 뚜렷할 때만 넘김 (세로 스크롤과 충돌 방지)
-      // touchmove로 마지막 위치를 기록하고, 안드로이드에서 touchend 대신 오는 touchcancel도 처리
       let sx = 0,
         sy = 0,
-        lx = 0,
-        ly = 0,
-        st = 0,
-        tracking = false;
-      const app = $("app");
-      app.addEventListener(
+        st = 0;
+      $("app").addEventListener(
         "touchstart",
         (e) => {
-          if (e.touches.length > 1) {
-            tracking = false;
-            return;
-          }
           const t = e.touches[0];
-          sx = lx = t.clientX;
-          sy = ly = t.clientY;
+          sx = t.clientX;
+          sy = t.clientY;
           st = Date.now();
-          tracking = true;
         },
         { passive: true },
       );
-      app.addEventListener(
-        "touchmove",
+      $("app").addEventListener(
+        "touchend",
         (e) => {
-          const t = e.touches[0];
-          lx = t.clientX;
-          ly = t.clientY;
+          const t = e.changedTouches[0];
+          const dx = t.clientX - sx,
+            dy = t.clientY - sy;
+          if (
+            Math.abs(dx) > 50 &&
+            Math.abs(dx) > Math.abs(dy) * 1.5 &&
+            Date.now() - st < 800
+          ) {
+            go(dx < 0 ? idx + 1 : idx - 1);
+          }
         },
         { passive: true },
       );
-      function endSwipe() {
-        if (!tracking) return;
-        tracking = false;
-        const dx = lx - sx,
-          dy = ly - sy;
-        if (
-          Math.abs(dx) > 40 &&
-          Math.abs(dx) > Math.abs(dy) * 1.2 &&
-          Date.now() - st < 1000
-        ) {
-          go(dx < 0 ? idx + 1 : idx - 1);
-        }
-      }
-      app.addEventListener("touchend", endSwipe, { passive: true });
-      app.addEventListener("touchcancel", endSwipe, { passive: true });
 
       // 데스크톱 확인용 키보드
       document.addEventListener("keydown", (e) => {
